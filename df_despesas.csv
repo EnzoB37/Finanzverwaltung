@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ,Valor,Efetuado,Fixo,Data,Categoria,Descrição
 0,144.0,1,0,2025-03-05,Comissão,Comissão
 1,120.0,1,0,2025-03-05,Fardamento,Lavadeira
@@ -19,11 +18,3 @@
 16,64.9,0,0,2025-03-07,Alimentação,Limongi
 17,34.0,0,0,2025-03-07,Extra,Salgadinho Freitas/Fonseca
 18,30.0,0,0,2025-03-07,Invest. Resgate Fut,DinDin 
-=======
-,Valor,Efetuado,Fixo,Data,Categoria,Descrição
-0,144.0,1,0,2025-03-05,Comissão,Comissão
-1,120.0,1,0,2025-03-05,Fardamento,Lavadeira
-2,617.49,1,0,2025-03-05,Fatura,Faturas
-3,42.0,1,0,2025-03-05,Fardamento,Cobertura
-4,35.0,1,0,2025-03-09,Alimentação,Chocolates
->>>>>>> 23caa3f101c976c15d75672143eb8a5bdcd9fb77
