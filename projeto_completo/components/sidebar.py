@@ -119,7 +119,19 @@ layout = dbc.Card([
             dbc.Row([
                 dbc.Col([
                     dbc.Button(color="danger", id="open-novo-despesa",
-                            children=["+ Despesa"]),
+                            children=["+ Despes"]),
+                ], width=6),
+
+                dbc.Col([
+                    dbc.Button(color="warning", id="open-novo-gasto",
+                            children=["+ GasFut"]),
+                ], width=6)
+            ]),
+
+            dbc.Row([
+                dbc.Col([
+                    dbc.Button(color="info", id="open-novo-entrada",
+                            children=["+ EntFut"]),
                 ], width=6)
             ]),
 
@@ -304,6 +316,186 @@ layout = dbc.Card([
                 backdrop=True)
             ]),
 
+            # Modal Entrada Futura
+            html.Div([
+                dbc.Modal([
+                    dbc.ModalHeader(dbc.ModalTitle("Adicionar entrada futura")),
+                    dbc.ModalBody([
+                        dbc.Row([
+                            dbc.Col([
+                                    dbc.Label("Descrição: "),
+                                    dbc.Input(placeholder="Ex.: dividendos da bolsa, herança...", id="txt-entrada"),
+                            ], width=6), 
+                            dbc.Col([
+                                    dbc.Label("Valor: "),
+                                    dbc.Input(placeholder="$100.00", id="valor_entrada", value="")
+                            ], width=6)
+                        ]),
+
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Label("Data: "),
+                                dcc.DatePickerSingle(id='date-entrada',
+                                    min_date_allowed=date(2020, 1, 1),
+                                    max_date_allowed=date(2030, 12, 31),
+                                    date=datetime.today(),
+                                    style={"width": "100%"}
+                                ),
+                            ], width=4),
+
+                            dbc.Col([
+                                dbc.Label("Extras"),
+                                dbc.Checklist(
+                                    options=[{"label": "Foi recebida", "value": 1},
+                                        {"label": "Entrada Recorrente", "value": 2}],
+                                    value=[1],
+                                    id="switches-input-entrada",
+                                    switch=True),
+                            ], width=4),
+
+                            dbc.Col([
+                                html.Label("Categoria da entrada"),
+                                dbc.Select(id="select_entrada", options=[{"label": i, "value": i} for i in cat_entrada], value=cat_entrada[0])
+                            ], width=4)
+                        ], style={"margin-top": "25px"}),
+                        
+                        dbc.Row([
+                            dbc.Accordion([
+                                    dbc.AccordionItem(children=[
+                                            dbc.Row([
+                                                dbc.Col([
+                                                    html.Legend("Adicionar categoria", style={'color': 'green'}),
+                                                    dbc.Input(type="text", placeholder="Nova categoria...", id="input-add-entrada", value=""),
+                                                    html.Br(),
+                                                    dbc.Button("Adicionar", className="btn btn-success", id="add-category-entrada", style={"margin-top": "20px"}),
+                                                    html.Br(),
+                                                    html.Div(id="category-div-add-entrada", style={}),
+                                                ], width=6),
+
+                                                dbc.Col([
+                                                    html.Legend("Excluir categorias", style={'color': 'red'}),
+                                                    dbc.Checklist(
+                                                        id="checklist-selected-style-entrada",
+                                                        options=[{"label": i, "value": i} for i in cat_entrada],
+                                                        value=[],
+                                                        label_checked_style={"color": "red"},
+                                                        input_checked_style={"backgroundColor": "#fa7268",
+                                                            "borderColor": "#ea6258"},
+                                                    ),                                                            
+                                                    dbc.Button("Remover", color="warning", id="remove-category-entrada", style={"margin-top": "20px"}),
+                                                ], width=6)
+                                            ]),
+                                        ], title="Adicionar/Remover Categorias",
+                                    ),
+                                ], flush=True, start_collapsed=True, id='accordion-entrada'),
+                                    
+                                    html.Div(id="id_teste_entrada", style={"padding-top": "20px"}),
+                                
+                                    dbc.ModalFooter([
+                                        dbc.Button("Adicionar Entrada", id="salvar_entrada", color="success"),
+                                        dbc.Popover(dbc.PopoverBody("Entrada Salva"), target="salvar_entrada", placement="left", trigger="click"),
+                                        ])
+                            ], style={"margin-top": "25px"}),
+                        ])
+                ],
+                style={"background-color": "rgba(17, 140, 79, 0.05)"},
+                id="modal-novo-entrada",
+                size="lg",
+                is_open=False,
+                centered=True,
+                backdrop=True)
+            ]),
+
+            # Modal Gasto Futuro
+            html.Div([
+                dbc.Modal([
+                    dbc.ModalHeader(dbc.ModalTitle("Adicionar gasto futuro")),
+                    dbc.ModalBody([
+                        dbc.Row([
+                            dbc.Col([
+                                    dbc.Label("Descrição: "),
+                                    dbc.Input(placeholder="Ex.: dividendos da bolsa, herança...", id="txt-gasto"),
+                            ], width=6), 
+                            dbc.Col([
+                                    dbc.Label("Valor: "),
+                                    dbc.Input(placeholder="$100.00", id="valor_gasto", value="")
+                            ], width=6)
+                        ]),
+
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Label("Data: "),
+                                dcc.DatePickerSingle(id='date-gasto',
+                                    min_date_allowed=date(2020, 1, 1),
+                                    max_date_allowed=date(2030, 12, 31),
+                                    date=datetime.today(),
+                                    style={"width": "100%"}
+                                ),
+                            ], width=4),
+
+                            dbc.Col([
+                                dbc.Label("Extras"),
+                                dbc.Checklist(
+                                    options=[{"label": "Foi recebida", "value": 1},
+                                        {"label": "Gasto Recorrente", "value": 2}],
+                                    value=[1],
+                                    id="switches-input-gasto",
+                                    switch=True),
+                            ], width=4),
+
+                            dbc.Col([
+                                html.Label("Categoria do gasto"),
+                                dbc.Select(id="select_gasto", options=[{"label": i, "value": i} for i in cat_gasto], value=cat_gasto[0])
+                            ], width=4)
+                        ], style={"margin-top": "25px"}),
+                        
+                        dbc.Row([
+                            dbc.Accordion([
+                                    dbc.AccordionItem(children=[
+                                            dbc.Row([
+                                                dbc.Col([
+                                                    html.Legend("Adicionar categoria", style={'color': 'green'}),
+                                                    dbc.Input(type="text", placeholder="Nova categoria...", id="input-add-gasto", value=""),
+                                                    html.Br(),
+                                                    dbc.Button("Adicionar", className="btn btn-success", id="add-category-gasto", style={"margin-top": "20px"}),
+                                                    html.Br(),
+                                                    html.Div(id="category-div-add-gasto", style={}),
+                                                ], width=6),
+
+                                                dbc.Col([
+                                                    html.Legend("Excluir categorias", style={'color': 'red'}),
+                                                    dbc.Checklist(
+                                                        id="checklist-selected-style-gasto",
+                                                        options=[{"label": i, "value": i} for i in cat_gasto],
+                                                        value=[],
+                                                        label_checked_style={"color": "red"},
+                                                        input_checked_style={"backgroundColor": "#fa7268",
+                                                            "borderColor": "#ea6258"},
+                                                    ),                                                            
+                                                    dbc.Button("Remover", color="warning", id="remove-category-gasto", style={"margin-top": "20px"}),
+                                                ], width=6)
+                                            ]),
+                                        ], title="Adicionar/Remover Categorias",
+                                    ),
+                                ], flush=True, start_collapsed=True, id='accordion-gasto'),
+                                    
+                                    html.Div(id="id_teste_gasto", style={"padding-top": "20px"}),
+                                
+                                    dbc.ModalFooter([
+                                        dbc.Button("Adicionar Gasto", id="salvar_gasto", color="success"),
+                                        dbc.Popover(dbc.PopoverBody("Gasto Salvo"), target="salvar_gasto", placement="left", trigger="click"),
+                                        ])
+                            ], style={"margin-top": "25px"}),
+                        ])
+                ],
+                style={"background-color": "rgba(17, 140, 79, 0.05)"},
+                id="modal-novo-gasto",
+                size="lg",
+                is_open=False,
+                centered=True,
+                backdrop=True)
+            ]),
+
             ### Modal Despesa ###
             dbc.Modal([
                 dbc.ModalHeader(dbc.ModalTitle("Adicionar despesa")),
@@ -398,6 +590,7 @@ layout = dbc.Card([
                     dbc.NavLink("Dashboard", href="/dashboards", active="exact"),
                     dbc.NavLink("Extratos", href="/extratos", active="exact"),
                     dbc.NavLink("Investimentos", href="/investimentos", active="exact"),
+                    dbc.NavLink("Projeção", href="/projecao", active="exact"),
                 ], vertical=True, pills=True, id='nav_buttons', style={"margin-bottom": "50px"}),
             ThemeChangerAIO(aio_id="theme", radio_props={"value":dbc.themes.DARKLY})
 
@@ -428,6 +621,26 @@ def toggle_modal(n1, is_open):
     if n1:
         return not is_open
 
+# Pop-up gasto futuro
+@app.callback(
+    Output("modal-novo-gasto", "is_open"),
+    Input("open-novo-gasto", "n_clicks"),
+    State("modal-novo-gasto", "is_open")
+)
+def toggle_modal(n1, is_open):
+    if n1:
+        return not is_open
+    
+# Pop-up entrada futura
+@app.callback(
+    Output("modal-novo-entrada", "is_open"),
+    Input("open-novo-entrada", "n_clicks"),
+    State("modal-novo-entrada", "is_open")
+)
+def toggle_modal(n1, is_open):
+    if n1:
+        return not is_open
+    
 # Pop-up despesa
 @app.callback(
     Output("modal-novo-despesa", "is_open"),
@@ -535,6 +748,92 @@ def add_category(n, n2, txt, check_delete, data):
 
     return [txt1, style1, opt_investimento, opt_investimento, [], data_return]
 
+# Add/Remove categoria gasto futuro
+@app.callback(
+    [Output("category-div-add-gasto", "children"),
+    Output("category-div-add-gasto", "style"),
+    Output("select_gasto", "options"),
+    Output('checklist-selected-style-gasto', 'options'),
+    Output('checklist-selected-style-gasto', 'value'),
+    Output('stored-cat-gasto', 'data')],
+
+    [Input("add-category-gasto", "n_clicks"),
+    Input("remove-category-gasto", 'n_clicks')],
+
+    [State("input-add-gasto", "value"),
+    State('checklist-selected-style-gasto', 'value'),
+    State('stored-cat-gasto', 'data')]
+)
+def add_category(n, n2, txt, check_delete, data):
+    cat_gasto = list(data["Categoria"].values())
+
+    txt1 = []
+    style1 = {}
+
+    if n:
+        if txt == "" or txt == None:
+            txt1 = "O campo de texto não pode estar vazio para o registro de uma nova categoria."
+            style1 = {'color': 'red'}
+
+        else:
+            cat_gasto = cat_gasto + [txt] if txt not in cat_gasto else cat_gasto
+            txt1 = f'A categoria {txt} foi adicionada com sucesso!'
+            style1 = {'color': 'green'}
+    
+    if n2:
+        if len(check_delete) > 0:
+            cat_gasto = [i for i in cat_gasto if i not in check_delete]  
+    
+    opt_gasto = [{"label": i, "value": i} for i in cat_gasto]
+    df_cat_gasto = pd.DataFrame(cat_gasto, columns=['Categoria'])
+    df_cat_gasto.to_csv("df_cat_gasto.csv")
+    data_return = df_cat_gasto.to_dict()
+
+    return [txt1, style1, opt_gasto, opt_gasto, [], data_return]
+
+# Add/Remove categoria entrada futura
+@app.callback(
+    [Output("category-div-add-entrada", "children"),
+    Output("category-div-add-entrada", "style"),
+    Output("select_entrada", "options"),
+    Output('checklist-selected-style-entrada', 'options'),
+    Output('checklist-selected-style-entrada', 'value'),
+    Output('stored-cat-entrada', 'data')],
+
+    [Input("add-category-entrada", "n_clicks"),
+    Input("remove-category-entrada", 'n_clicks')],
+
+    [State("input-add-entrada", "value"),
+    State('checklist-selected-style-entrada', 'value'),
+    State('stored-cat-entrada', 'data')]
+)
+def add_category(n, n2, txt, check_delete, data):
+    cat_entrada = list(data["Categoria"].values())
+
+    txt1 = []
+    style1 = {}
+
+    if n:
+        if txt == "" or txt == None:
+            txt1 = "O campo de texto não pode estar vazio para o registro de uma nova categoria."
+            style1 = {'color': 'red'}
+
+        else:
+            cat_entrada = cat_entrada + [txt] if txt not in cat_entrada else cat_entrada
+            txt1 = f'A categoria {txt} foi adicionada com sucesso!'
+            style1 = {'color': 'green'}
+    
+    if n2:
+        if len(check_delete) > 0:
+            cat_entrada = [i for i in cat_entrada if i not in check_delete]  
+    
+    opt_entrada = [{"label": i, "value": i} for i in cat_entrada]
+    df_cat_entrada = pd.DataFrame(cat_entrada, columns=['Categoria'])
+    df_cat_entrada.to_csv("df_cat_entrada.csv")
+    data_return = df_cat_entrada.to_dict()
+
+    return [txt1, style1, opt_entrada, opt_entrada, [], data_return]
+
 # Add/Remove categoria receita
 @app.callback(
     [Output("category-div-add-receita", "children"),
@@ -579,8 +878,6 @@ def add_category(n, n2, txt, check_delete, data):
     data_return = df_cat_receita.to_dict()
 
     return [txt1, style1, opt_receita, opt_receita, [], data_return]
-
-    
 
 # Enviar Form receita
 @app.callback(
@@ -644,6 +941,70 @@ def salve_form_investimento(n, descricao, valor, date, switches, categoria, dict
         df_investimentos.to_csv("df_investimento.csv")
 
     data_return = df_investimentos.to_dict()
+    return data_return
+
+# Enviar Form gasto futuro
+@app.callback(
+    Output('store-gasto', 'data'),
+
+    Input("salvar_gasto", "n_clicks"),
+
+    [
+        State("txt-gasto", "value"),
+        State("valor_gasto", "value"),
+        State("date-gasto", "date"),
+        State("switches-input-gasto", "value"),
+        State("select_gasto", "value"),
+        State('store-gasto', 'data')
+    ]
+)
+def salve_form_gasto(n, descricao, valor, date, switches, categoria, dict_gasto):
+    df_gasto = pd.DataFrame(dict_gasto)
+
+    if n and not(valor == "" or valor== None):
+        valor = round(float(valor), 2)
+        date = pd.to_datetime(date).date()
+        categoria = categoria[0] if type(categoria) == list else categoria
+
+        recebido = 1 if 1 in switches else 0
+        fixo = 0 if 2 in switches else 0
+
+        df_gasto.loc[df_gasto.shape[0]] = [valor, recebido, fixo, date, categoria, descricao]
+        df_gasto.to_csv("df_gasto.csv")
+
+    data_return = df_gasto.to_dict()
+    return data_return
+
+# Enviar Form entrada futura
+@app.callback(
+    Output('store-entrada', 'data'),
+
+    Input("salvar_entrada", "n_clicks"),
+
+    [
+        State("txt-entrada", "value"),
+        State("valor_entrada", "value"),
+        State("date-entrada", "date"),
+        State("switches-input-entrada", "value"),
+        State("select_entrada", "value"),
+        State('store-entrada', 'data')
+    ]
+)
+def salve_form_entrada(n, descricao, valor, date, switches, categoria, dict_entrada):
+    df_entrada = pd.DataFrame(dict_entrada)
+
+    if n and not(valor == "" or valor== None):
+        valor = round(float(valor), 2)
+        date = pd.to_datetime(date).date()
+        categoria = categoria[0] if type(categoria) == list else categoria
+
+        recebido = 1 if 1 in switches else 0
+        fixo = 0 if 2 in switches else 0
+
+        df_entrada.loc[df_entrada.shape[0]] = [valor, recebido, fixo, date, categoria, descricao]
+        df_entrada.to_csv("df_entrada.csv")
+
+    data_return = df_entrada.to_dict()
     return data_return
 
 # Enviar Form despesa

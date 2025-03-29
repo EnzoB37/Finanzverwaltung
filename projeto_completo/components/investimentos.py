@@ -19,26 +19,26 @@ layout = dbc.Col([
     ]),
 
     dbc.Row([
-            dbc.Col([
-                dcc.Graph(id='bar-graphs', style={"margin-right": "20px"}),
-            ], width=9),
+        dbc.Col([
+            dcc.Graph(id='bar-graphs', style={"margin-right": "20px"}),
+        ], width=9),
             
-            dbc.Col([
-                dbc.Card(
-                    dbc.CardBody([
-                        html.H4("Investimentos"),
-                        html.Legend("R$ -", id="valor_investimento_card", style={'font-size': '60px'}),
-                        html.H6("Total de investimentos"),
-                    ], style={'text-align': 'center', 'padding-top': '30px'}))
-            ], width=3),
-        ]),
-    ], style={"padding": "10px"})
+        dbc.Col([
+            dbc.Card(
+                dbc.CardBody([
+                    html.H4("Investimentos"),
+                    html.Legend("R$ -", id="valor_investimento_card", style={'font-size': '60px'}),
+                    html.H6("Total de investimentos"),
+                ], style={'text-align': 'center', 'padding-top': '30px'}))
+        ], width=3),
+    ]),
+], style={"padding": "10px"})
 
 # =========  Callbacks  =========== #
 # Tabela
 @app.callback(
     Output('tabela-investimentos', 'children'),
-    Input('store-investimentoss', 'data')
+    Input('store-investimentos', 'data')
 )
 def imprimir_tabela (data):
     df = pd.DataFrame(data)
@@ -55,7 +55,7 @@ def imprimir_tabela (data):
     df.sort_values(by='Data', ascending=False)
 
     tabela = dash_table.DataTable(
-        id='datatable-interactivity',
+        id='data-table-interactivity',
         columns=[
             {"name": i, "id": i, "deletable": False, "selectable": False, "hideable": True}
             if i == "Descrição" or i == "Fixo" or i == "Efetuado"

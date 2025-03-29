@@ -29,33 +29,48 @@ layout = dbc.Col([
             # Saldo
             dbc.Col([
                     dbc.CardGroup([
-                            dbc.Card([
-                                    html.Legend("Saldo"),
-                                    html.H5("R$ -", id="p-saldo-dashboards", style={}),
-                            ], style={"padding-left": "20px", "padding-top": "10px"}),
                             dbc.Card(
                                 html.Div(className="fa fa-money", style=card_icon), 
                                 color="warning",
-                                style={"maxWidth": 56.25, "height": 100, "margin-left": "-10px"},
-                            )])
+                                style={"maxWidth": 56.25, "height": 100, "margin-left": "5px"}),
+                            dbc.Card([
+                                    html.Legend("Saldo", style={"margin-left": "5px"}),
+                                    html.H5("R$ -", id="p-saldo-dashboards", style={"margin-left": "5px"}),
+                            ], style={"padding-left": "-10px", "padding-top": "10px"}),
+                            ])
                     ], width=3),
 
             # Investimentos
             dbc.Col([
                 dbc.CardGroup([
-                    dbc.Card([
-                        html.Legend("Investimentos"),
-                        html.H5("R$ -", id="p-investimento-dashboards"),
-                    ], style={"padding-left": "20px", "padding-top": "10px"}),
                     dbc.Card(
                         html.Div(className="fa fa-university", style=card_icon),
                         color="blue",
-                        style={"maxWidth": 56.25, "height": 100, "margin-left": "-10px"},
-                    )])
+                        style={"maxWidth": 56.25, "height": 100, "margin-left": "5px"}),
+                    dbc.Card([
+                        html.Legend("Investimentos", style={"margin-left": "5px"}),
+                        html.H5("R$ -", id="p-investimento-dashboards", style={"margin-left": "5px"}),
+                    ], style={"padding-left": "-10px", "padding-top": "10px"}),
+                    ])
             ], width=3),   
+
+            # Crédito
+            dbc.Col([
+                dbc.CardGroup([
+                    dbc.Card(
+                        html.Div(className="fa fa-meh-o", style=card_icon), 
+                        color="danger",
+                        style={"maxWidth": 56.25, "height": 100, "margin-left": "5px"}),
+                    dbc.Card([
+                        html.Legend("Crédito", style={"margin-left": "5px"}),
+                        html.H5("R$ -", id="p-credito-dashboards", style={"margin-left": "5px"}),
+                    ], style={"padding-left": "-10px", "padding-top": "10px"}),
+                    ])
+                ], width=3),
 
             # Receita
             dbc.Col([
+                dbc.Collapse(
                     dbc.CardGroup([
                             dbc.Card([
                                     html.Legend("Receita"),
@@ -65,22 +80,27 @@ layout = dbc.Col([
                                 html.Div(className="fa fa-smile-o", style=card_icon), 
                                 color="success",
                                 style={"maxWidth": 56.25, "height": 100, "margin-left": "-10px"},
-                            )])
-                    ], width=3),
+                            )]), id="collapse", is_open=False,
+                )
+            ]
+                    , width=3),
 
             # Despesa
             dbc.Col([
-                dbc.CardGroup([
-                    dbc.Card([
-                        html.Legend("Despesas"),
-                        html.H5("R$ -", id="p-despesa-dashboards"),
-                    ], style={"padding-left": "20px", "padding-top": "10px"}),
-                    dbc.Card(
-                        html.Div(className="fa fa-meh-o", style=card_icon), 
-                        color="danger",
-                        style={"maxWidth": 56.25, "height": 100, "margin-left": "-10px"},
-                    )])
-                ], width=3),
+                    dbc.Collapse(
+                        dbc.CardGroup([
+                                dbc.Card([
+                                    html.Legend("Despesas"),
+                                    html.H5("R$ -", id="p-despesa-dashboards"),
+                                ], style={"padding-left": "20px", "padding-top": "10px"}),
+                                dbc.Card(
+                                    html.Div(className="fa fa-meh-o", style=card_icon), 
+                                    color="danger",
+                                    style={"maxWidth": 56.25, "height": 100, "margin-left": "-10px"},
+                                )]), id="collapse1", is_open=False,
+                                )
+                        ]               
+                    , width=3),
              
         ], style={"margin": "10px"}),
 
@@ -154,19 +174,32 @@ layout = dbc.Col([
     Input("store-receitas", "data"))
 def populate_dropdownvalues(data):
     df = pd.DataFrame(data)
-    valor = round(df['Valor'].sum(), 2)
+    valor = round(df[df['Efetuado']==1]['Valor'].sum(), 2)
     val = df.Categoria.unique().tolist()
 
     return [([{"label": x, "value": x} for x in df.Categoria.unique()]), val, f"R$ {valor}"]
 
 # Dropdown Despesa
+@app.callback([Output("dropdown-despesa", "options", allow_duplicate=True),
+    Output("dropdown-despesa", "value", allow_duplicate=True),
+    Output("p-despesa-dashboards", "children")],
+    Input("store-despesas", "data"),
+    prevent_initial_call=True)
+def populate_dropdownvalues(data):
+    df = pd.DataFrame(data)
+    valor = round(df[df['Efetuado']==1]['Valor'].sum(), 2)
+    val = df.Categoria.unique().tolist()
+
+    return [([{"label": x, "value": x} for x in df.Categoria.unique()]), val, f"R$ {valor}"]
+
+# Dropdown Crédito
 @app.callback([Output("dropdown-despesa", "options"),
     Output("dropdown-despesa", "value"),
-    Output("p-despesa-dashboards", "children")],
+    Output("p-credito-dashboards", "children")],
     Input("store-despesas", "data"))
 def populate_dropdownvalues(data):
     df = pd.DataFrame(data)
-    valor = round(df['Valor'].sum(), 2)
+    valor = round(df[df['Efetuado']==0]['Valor'].sum(), 2)
     val = df.Categoria.unique().tolist()
 
     return [([{"label": x, "value": x} for x in df.Categoria.unique()]), val, f"R$ {valor}"]
@@ -194,7 +227,7 @@ def saldo_total(despesas, receitas, investimentos):
     df_receitas = pd.DataFrame(receitas)
     df_investimentos = pd.DataFrame(investimentos)
 
-    valor = round(df_receitas['Valor'].sum() - df_despesas['Valor'].sum() - df_investimentos['Valor'].sum(), 2)
+    valor = round(df_receitas['Valor'].sum() - df_despesas[df_despesas['Efetuado']==1]['Valor'].sum() - df_investimentos['Valor'].sum(), 2)
 
     return f"R$ {valor}"
     

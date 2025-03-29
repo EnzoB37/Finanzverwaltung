@@ -44,11 +44,15 @@ def imprimir_tabela (data):
     df = pd.DataFrame(data)
     df['Data'] = pd.to_datetime(df['Data']).dt.date
 
-    df.loc[df['Efetuado'] == 0, 'Efetuado'] = 'Não'
-    df.loc[df['Efetuado'] == 1, 'Efetuado'] = 'Sim'
+    df['Efetuado']=df['Efetuado'].astype(str)
 
-    df.loc[df['Fixo'] == 0, 'Fixo'] = 'Não'
-    df.loc[df['Fixo'] == 1, 'Fixo'] = 'Sim'
+    df.loc[df['Efetuado'] == '0', 'Efetuado'] = 'Crédito'
+    df.loc[df['Efetuado'] == '1', 'Efetuado'] = 'Pix'
+
+    df['Fixo']=df['Fixo'].astype(str)
+
+    df.loc[df['Fixo'] == '0', 'Fixo'] = 'Não'
+    df.loc[df['Fixo'] == '1', 'Fixo'] = 'Sim'
 
     df = df.fillna('-')
 
@@ -97,6 +101,6 @@ def bar_chart(data, theme):
 )
 def display_desp(data):
     df = pd.DataFrame(data)
-    valor = df['Valor'].sum()
+    valor = round(df['Valor'].sum(), 2)
     
     return f"R$ {valor}"
