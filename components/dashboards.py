@@ -199,6 +199,8 @@ def populate_dropdownvalues(data):
     Input("store-despesas", "data"))
 def populate_dropdownvalues(data):
     df = pd.DataFrame(data)
+    df['Data'] = pd.to_datetime(df['Data'])
+    df = df[df['Data'].dt.strftime('%Y-%m') == date.today().strftime("%Y-%m")]
     valor = round(df[df['Efetuado']==0]['Valor'].sum(), 2)
     val = df.Categoria.unique().tolist()
 
@@ -330,7 +332,8 @@ def pie_receita(data_receita, receita, theme):
 )
 def pie_despesa(data_despesa, despesa, theme):
     df = pd.DataFrame(data_despesa)
-    df = df[df['Categoria'].isin(despesa)]
+    df = df.groupby('Categoria').sum()
+    df = df.drop(index='Fatura').drop(index='Ajuste saldo').reset_index()
 
     fig = px.pie(df, values=df.Valor, names=df.Categoria, hole=.2)
     fig.update_layout(title={'text': "Despesas"})

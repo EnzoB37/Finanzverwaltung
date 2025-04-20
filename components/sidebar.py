@@ -591,6 +591,7 @@ layout = dbc.Card([
                     dbc.NavLink("Extratos", href="/extratos", active="exact"),
                     dbc.NavLink("Investimentos", href="/investimentos", active="exact"),
                     dbc.NavLink("Projeção", href="/projecao", active="exact"),
+                    dbc.NavLink("Despesas/Mês", href="/desp_mes", active="exact"),
                 ], vertical=True, pills=True, id='nav_buttons', style={"margin-bottom": "50px"}),
             ThemeChangerAIO(aio_id="theme", radio_props={"value":dbc.themes.DARKLY})
 

@@ -8,7 +8,7 @@ import plotly.express as px
 
 # import from folders
 from app import *
-from components import sidebar, dashboards, extratos, investimentos, projecao
+from components import sidebar, dashboards, extratos, investimentos, projecao, desp_mes
 from globals import *
 
 # DataFrames and Dcc.Store
@@ -86,6 +86,9 @@ def render_page_content(pathname):
     
     if pathname == "/projecao":
         return projecao.layout
+    
+    if pathname == "/desp_mes":
+        return desp_mes.layout
         
 
 if __name__ == '__main__':

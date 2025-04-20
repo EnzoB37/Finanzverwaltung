@@ -97,6 +97,6 @@ def bar_chart(data, theme):
 )
 def display_invest(data):
     df = pd.DataFrame(data)
-    valor = df['Valor'].sum()
+    valor = round(df['Valor'].sum(), 2)
 
     return f"R$ {valor}"
